@@ -22,8 +22,8 @@ import java.util.Enumeration;
  */
 public class FormInterceptor extends HandlerInterceptorAdapter {
 
-    Logger logger = LoggerFactory.getLogger(FormInterceptor.class);
-    final static String START_TIME = "start_time";
+    private Logger logger = LoggerFactory.getLogger(FormInterceptor.class);
+    private final static String START_TIME = "start_time";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

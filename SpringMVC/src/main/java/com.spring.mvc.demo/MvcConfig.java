@@ -2,11 +2,15 @@ package com.spring.mvc.demo;
 
 
 import com.spring.mvc.demo.interceptor.FormInterceptor;
+import com.spring.mvc.demo.support.ResponseJsonMethodProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+import java.util.List;
 
 /**
  * @author baiyu
@@ -23,6 +27,16 @@ public class MvcConfig implements WebMvcConfigurer {
         return new FormInterceptor();
     }
 
+    @Bean
+    public ResponseJsonMethodProcessor provideResponseJsonMethodProcessor() {
+        return new ResponseJsonMethodProcessor();
+    }
+
+    @Override
+    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+        handlers.add(provideResponseJsonMethodProcessor());
+    }
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
@@ -32,7 +46,9 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(provideFormInterceptor())
-                .addPathPatterns("/anno/submit_json");
+                .addPathPatterns("/anno/submit_json")
+                .addPathPatterns("/rest/get_json")
+                .addPathPatterns("/anno/exception");
     }
 
     @Override
