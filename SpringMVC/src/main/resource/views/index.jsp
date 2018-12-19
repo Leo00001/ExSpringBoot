@@ -21,6 +21,9 @@
     <input type="submit" value="提交">
 </form>
 
+<div>
+    <a href="/upload_page">跳转到上传示例页面</a>
+</div>
 
 <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 </body>

@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -21,6 +23,24 @@ import java.util.List;
 @EnableWebMvc
 @ComponentScan("com.spring.mvc.demo")
 public class MvcConfig implements WebMvcConfigurer {
+
+    @Bean
+    public InternalResourceViewResolver viewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("WEB-INF/classes/views/");
+        viewResolver.setSuffix(".jsp");
+        return viewResolver;
+    }
+
+    @Bean
+    public MultipartResolver multipartResolver() {
+        CommonsMultipartResolver cmr = new CommonsMultipartResolver();
+        long maxUploadSize = 1024 * 1024; // 1M
+        cmr.setMaxUploadSize(maxUploadSize);
+        return cmr;
+    }
+
+    // ========================= 以上配置名称不可修改，否则Spring会找不到对应的类
 
     @Bean
     public FormInterceptor provideFormInterceptor() {
@@ -41,6 +61,7 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/index").setViewName("index");
+        registry.addViewController("/upload_page").setViewName("upload");
     }
 
     @Override
@@ -57,11 +78,5 @@ public class MvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/assets/");
     }
 
-    @Bean
-    public InternalResourceViewResolver viewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("WEB-INF/classes/views/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }
+
 }
