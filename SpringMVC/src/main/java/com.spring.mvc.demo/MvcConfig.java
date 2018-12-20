@@ -3,6 +3,7 @@ package com.spring.mvc.demo;
 
 import com.spring.mvc.demo.interceptor.FormInterceptor;
 import com.spring.mvc.demo.support.ResponseJsonMethodProcessor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -32,10 +33,14 @@ public class MvcConfig implements WebMvcConfigurer {
         return viewResolver;
     }
 
+    /**
+     * 名称必须是multipartResolver {@link org.springframework.web.servlet.DispatcherServlet#initMultipartResolver(ApplicationContext)}
+     * @return
+     */
     @Bean
     public MultipartResolver multipartResolver() {
         CommonsMultipartResolver cmr = new CommonsMultipartResolver();
-        long maxUploadSize = 1024 * 1024; // 1M
+        long maxUploadSize = 1024 * 1024 * 100; // 100M
         cmr.setMaxUploadSize(maxUploadSize);
         return cmr;
     }
