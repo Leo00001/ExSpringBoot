@@ -1,0 +1,18 @@
+server:
+  # 配置端口
+  port: 8099
+# 配置context-path
+#  servlet:
+#    context-path: /api
+
+
+# 外部配置
+book.name: 世界五百强
+book.author: Jack
+
+# Log
+logging:
+  level:
+    root: info
+  #日志文件
+  # file: /home/baiyu/Desktop/log.log

@@ -20,19 +20,19 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${spring-boot.version}</version>
+			<version>${spring-framework.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>${spring-boot.version}</version>
+			<version>${spring-framework.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>${spring-boot.version}</version>
+			<version>${spring-framework.version}</version>
 		</dependency>
 
 		<dependency>
