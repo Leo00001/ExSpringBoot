@@ -1,9 +1,9 @@
 server:
   # 配置端口
-  port: 8099
-# 配置context-path
-#  servlet:
-#    context-path: /api
+  port: 8080
+  # 配置context-path访问根路径
+  #servlet:
+  #  context-path: /api
 
 
 # 外部配置
@@ -16,3 +16,18 @@ logging:
     root: info
   #日志文件
   # file: /home/baiyu/Desktop/log.log
+
+# Spring基本配置
+spring:
+  # 配置Profile不同环境使用不同配置信息
+  profiles:
+    active: dev
+  # 网络配置类似web.xml中的CharacterEncodingFilter
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+# Spring自动配置原理展示
+hello:
+  content: Custom AutoConfiguration

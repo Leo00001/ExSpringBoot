@@ -1,5 +1,6 @@
 package me.spring.boot.controller;
 
+import com.spring.boot.theory.HelloService;
 import me.spring.boot.config.BookSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,10 @@ public class HelloController {
     @Autowired
     private BookSetting bookSetting;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    private HelloService helloService;
+
     @GetMapping("/1")
     public String hello() {
         return "Do you read the book '" + bookName + "' writed by " + bookAuthor;
@@ -33,5 +38,11 @@ public class HelloController {
     @GetMapping("/2")
     public String hello2() {
         return "Do you read the book '" + bookSetting.getName() + "' writed by " + bookSetting.getAuthor();
+    }
+
+
+    @GetMapping("/3")
+    public String hello3() {
+        return "This is hello from configuration " + helloService.sayHello();
     }
 }

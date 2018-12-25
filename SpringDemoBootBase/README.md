@@ -69,3 +69,16 @@ logback-classic版本低，推荐使用
 <slf4j.version>1.7.25</slf4j.version>
 ```
 
+## 配置Profile
+
+如果针对不同环境使用不同配置可以通过Spring配置文件中`spring-profile.active`来设置
+
+例如,我们可以在`resource`目录下创建生产环境和开发环境的配置文件
+
+    application-prod.properties
+    application-dev.properties
+
+之后在application.properties中配置需要加载那个环境
+
+    spring-profile.active=prod
+
