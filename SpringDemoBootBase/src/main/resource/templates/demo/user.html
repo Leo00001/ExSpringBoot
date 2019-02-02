@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf示例</title>
+    <!-- ~是域名下根路径，都则回事访问地址下的路径 -->
+    <link rel="stylesheet" th:href="@{~/assets/app/css/common.css}">
+</head>
+<body>
+
+<div>
+    <h3>用户名称</h3>
+    <span th:text="${user.name}"></span>
+    <p th:utext="|姓名:${user.name}|"></p>
+
+    <label> 来自session中的值${session.key}</label>
+    <p th:text="${session.sessionKey}"></p>
+    <label> 表达式中使用参数</label>
+    <p th:text="#{str.param(${user.name})}"></p>
+</div>
+
+<div>
+    <h3>国际化配置</h3>
+    <!-- label中的for属性作用
+        label中for属性配置input的id可以让input获取焦点，点击label后input就会有焦点
+    -->
+    <label> 全局配置</label>
+    <p th:text="#{page.content}">统一配置</p>
+    <p th:utext="#{user.welcome}"></p>
+</div>
+
+<div>
+    <h3>表达式基本对象</h3>
+    <label>ctx</label>
+    <p th:text="${#ctx.welcomeTemplateKey}"></p>
+    <label>local</label>
+    <p th:text="${#locale.getLanguage()}"></p>
+
+    <label>request</label>
+    <p th:text="${#request.getScheme()}"></p>
+
+    <label>date</label>
+    <p th:text="${#dates.format(nowTime, 'yyyy-MM-dd')}"></p>
+</div>
+
+</body>
+</html>

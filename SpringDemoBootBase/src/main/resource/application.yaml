@@ -10,6 +10,7 @@ server:
 book.name: 世界五百强
 book.author: Jack
 
+
 # Log
 logging:
   level:
@@ -28,6 +29,15 @@ spring:
       charset: UTF-8
       enabled: true
       force: true
+  # 配置国际化 可以包括多个，以逗号分隔。每一个ResourceBundle
+  messages:
+    basename: i18n/messages
+
 # Spring自动配置原理展示
 hello:
   content: Custom AutoConfiguration
+
+# 输出日志，打印自动配置信息
+debug: true
+
+

@@ -1,2 +1,18 @@
 server:
   port: 8088
+  address: 0.0.0.0
+
+# thymeleaf 配置
+spring:
+  thymeleaf:
+    # 开发模式配置false,避免了修改了模板哈要重新启动服务器
+    cache: false
+    check-template: true
+    check-template-location: true
+    enabled: true
+    encoding: UTF-8
+    mode: HTML5
+    # 定制模板路径，注意最后免有个/不可以缺少，但是这样配置后直接访问模板文件可以访问
+    # 所以还是使用默认路径classpath:/templates/这样浏览器无法直接访问，必须通过Controller
+    # prefix: classpath:/static/templates/
+    suffix: .html
