@@ -43,5 +43,13 @@
     <p th:text="${#dates.format(nowTime, 'yyyy-MM-dd')}"></p>
 </div>
 
+<div>
+    <h2>th:object与*{}联合使用</h2>
+    <div th:object="${user}">
+        <p th:text="|姓名: *{name}|"></p>
+        <p th:text="|年龄: *{age}|"></p>
+    </div>
+</div>
+
 </body>
 </html>

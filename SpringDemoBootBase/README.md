@@ -227,3 +227,10 @@ _ps: welcome=user.welcome=欢迎来到<b>北京</b>_
 * #response:(仅限Web Contexts）HttpServletResponse对象。
 * #session:(仅限Web Contexts）HttpSession对象。
 * #servletContext:(仅限Web Contexts）ServletContext对象。
+
+[表达式中的工具类使用](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-b-expression-utility-objects)
+
+### 选择表达式
+
+选择表达式对应*{}的使用方法，这里需要使用到th:object标签属性的语法
+我通过th:object选定变量对象后，在子标签中可以通过*{}直接使用对象的属性值
