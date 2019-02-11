@@ -234,3 +234,48 @@ _ps: welcome=user.welcome=欢迎来到<b>北京</b>_
 
 选择表达式对应*{}的使用方法，这里需要使用到th:object标签属性的语法
 我通过th:object选定变量对象后，在子标签中可以通过*{}直接使用对象的属性值
+
+示例：
+
+```
+<div>
+    <h2>th:object与*{}联合使用</h2>
+    <div th:object="${user}">
+        <p th:text="|姓名: *{name}|"></p>
+        <p th:text="|年龄: *{age}|"></p>
+    </div>
+</div>
+```
+
+### 链接 th:href使用
+
+Thymeleaf 配置链接使用`th:href`,语法是使用`@{}`陪配置
+
+- 方式1
+
+`<a href="https://www.baidu.com" th:href="@{https://www.baiduc.com/search(name=${user.name})}">链接1</a>`
+
+等同于`<a href="@{https://www.baiduc.com/search?name=Jack}">链接1</a>`
+
+- 方式2
+
+`<a href="https://www.baidu.com" th:href="@{/search/{name}/(name=${user.name})}">链接1</a>`
+
+等同于`<a href="@{/search/Jack}">链接1</a>`
+    
+- 方式3
+
+`<a href="https://www.baidu.com" th:href="@{search(name=${user.name})}">链接1</a>`
+
+等同于`<a href="@{/search?name=Jack}">链接1</a>`
+
+示例
+
+```
+    <h2>th:href</h2>
+    <div>
+        <a href="https://www.baidu.com" th:href="@{search/{user}(name=${user.name}, user='陌生人')}">用户信息</a>
+    </div>
+```
+
+对于服务器根相对路径则使用`@{~/xxx}`

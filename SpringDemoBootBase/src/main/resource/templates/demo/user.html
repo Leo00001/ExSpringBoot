@@ -33,7 +33,7 @@
     <h3>表达式基本对象</h3>
     <label>ctx</label>
     <p th:text="${#ctx.welcomeTemplateKey}"></p>
-    <label>local</label>
+    <label>local</label>`1
     <p th:text="${#locale.getLanguage()}"></p>
 
     <label>request</label>
@@ -48,6 +48,18 @@
     <div th:object="${user}">
         <p th:text="|姓名: *{name}|"></p>
         <p th:text="|年龄: *{age}|"></p>
+    </div>
+
+</div>
+
+<div>
+    <h2>th:each遍历集合</h2>
+    <div th:each="user: ${users}">
+        <p th:text="|姓名: *{user.name}|"></p>
+    </div>
+    <h2>th:href</h2>
+    <div>
+        <a href="https://www.baidu.com" th:href="@{search/{user}(name=${user.name}, user='陌生人')}">用户信息</a>
     </div>
 </div>
 
