@@ -5,6 +5,14 @@
     <title>Thymeleaf示例</title>
     <!-- ~是域名下根路径，都则回事访问地址下的路径 -->
     <link rel="stylesheet" th:href="@{~/assets/app/css/common.css}">
+
+    <style>
+        .middle-font {
+            font-size: 1.2rem;
+            color: darkgreen;
+            font-family: "WenQuanYi Micro Hei", monospace;
+        }
+    </style>
 </head>
 <body>
 
@@ -17,6 +25,7 @@
     <p th:text="${session.sessionKey}"></p>
     <label> 表达式中使用参数</label>
     <p th:text="#{str.param(${user.name})}"></p>
+    <!--<p th:text="${__#{article.text('Var')}__}"></p>-->
 </div>
 
 <div>
@@ -33,7 +42,7 @@
     <h3>表达式基本对象</h3>
     <label>ctx</label>
     <p th:text="${#ctx.welcomeTemplateKey}"></p>
-    <label>local</label>`1
+    <label>local</label>
     <p th:text="${#locale.getLanguage()}"></p>
 
     <label>request</label>
@@ -41,6 +50,15 @@
 
     <label>date</label>
     <p th:text="${#dates.format(nowTime, 'yyyy-MM-dd')}"></p>
+    <p th:text="${{nowTime}}"></p>
+    <label>th:text中5+7</label>
+    <p th:text="5+7"></p>
+
+    <label>th:text中boolean</label>
+    <p th:text="true"></p>
+
+    <label>th:text中${user} == null</label>
+    <p th:text="${user} == null"></p>
 </div>
 
 <div>
@@ -50,9 +68,11 @@
         <p th:text="|年龄: *{age}|"></p>
     </div>
 
-</div>
+    <h2>th:class使用</h2>
+    <div th:object="${user}">
+        <p th:class="middle-font" th:text="|姓名: *{name}|"></p>
+    </div>
 
-<div>
     <h2>th:each遍历集合</h2>
     <div th:each="user: ${users}">
         <p th:text="|姓名: *{user.name}|"></p>
@@ -60,6 +80,11 @@
     <h2>th:href</h2>
     <div>
         <a href="https://www.baidu.com" th:href="@{search/{user}(name=${user.name}, user='陌生人')}">用户信息</a>
+    </div>
+
+    <div th:if="${users.size() &gt; 3}">
+        <p>用户数目大于3</p>
+        <p th:text="${user.bankCardList}?''">用户null</p>
     </div>
 </div>
 

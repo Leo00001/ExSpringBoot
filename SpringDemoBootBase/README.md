@@ -84,6 +84,13 @@ logback-classic版本低，推荐使用
     
 ## 使用thymeleaf
 
+需要在Spring中研究Thymeleaf
+
+1. 如何自定义标签 [参考链接](https://blog.csdn.net/yilei_forwork/article/details/80833150)
+2. 如何实现自定义转换服务,SpringBoot默认支持,通过`${{}}`可以将日期显示字符串调用了toString()方法
+
+
+
 ### SpringBoot集成
 使用thymeleaf需要引入文件
 ```
@@ -206,6 +213,14 @@ spring:
 
 _ps: welcome=user.welcome=欢迎来到<b>北京</b>_
 
+在`th:text`中 
+
+- 字符串使用单引号
+- 运算符可以直接运算
+- 在需要的地方使用()
+- 如果想要使用标签默认的text使用_替代 例如<p th:text="${user.bankCardList}?'':_">用户不为null</p>
+如果没有`:_`则不会显示任何内容
+
 ### 国际化配置中使用占位
 
 例如我们可以在国际化消息配置文件中使用
@@ -279,3 +294,11 @@ Thymeleaf 配置链接使用`th:href`,语法是使用`@{}`陪配置
 ```
 
 对于服务器根相对路径则使用`@{~/xxx}`
+
+### 运算符别名
+
+    运算符存在的文本别名：gt（>），lt（<），ge（>=），le（<=），not（!）。还eq（==），neq/ ne（!=
+
+Thymeleaf 中可以使用运算符`+` `-` `*` `/` `%` `==` `!=`  `?:`
+ 
+### 
