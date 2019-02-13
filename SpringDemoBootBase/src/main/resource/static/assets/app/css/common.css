@@ -1,3 +1,14 @@
 body {
-    background-color: aquamarine;
+
+    margin: 0 auto;
+    width: 720px;
+}
+
+a.btn {
+   /*去掉下划线*/
+    text-decoration: none;
+}
+
+tr.odd {
+    background-color: burlywood;
 }

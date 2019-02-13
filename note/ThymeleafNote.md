@@ -218,16 +218,78 @@ Thymeleaf 配置链接使用`th:href`,语法是使用`@{}`陪配置
 
 Thymeleaf 中可以使用运算符`+` `-` `*` `/` `%` `==` `!=`  `?:`
  
-## 设置属性 th:attr
+## 设置属性 
 
+### th:attr
 通过`th:attr`可以给标签设置属性例如
 
     <p th:attr="style='color: #FF8877'">这里使用了th:attr修改字颜色</p>
+    等同于 <p th:style="'color: #FF8877'">这里使用了th:attr修改字颜色</p>
 
 修改多个属性则使用`,`分隔
 
+ 如果要给特定属性设置值，thymeleaf还有很多特定属性的标记，例如th:background,th:action等
+ [更多属性](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#setting-value-to-specific-attributes)
  
-   
+ _ps:_
+ 
+ 这里有个小知识点，自己以前也没有注意.对于background属性,只有body标签可以使用其他标签无效果,而且background 属性规定规定文档的背景图像。
+ 
+ ```
+ <body background="#FF0000"> 无效果
+ <body background="https://www.badu.com/sss/ss.jpg"> 显示图片北京
+ <p background="https://www.badu.com/sss/ss.jpg"> 无效果
+ ```
+另外HTML5 已不再支持 <body> background 属性,建议使用 CSS 替代。
+因此th:background不可率使用
 
+ ### 追加属性值
+ 
+ 如果你想保留原标签的Css属性，同时增加新的样式可以使用如下标签
+ 
+ - th:attrappend和th:attrprepend附加（后缀）或前置（前缀）到现有属性值
+ - th:classappend和th:classprepend
+ - th:styleappend和th:styleprepend
 
+示例
+
+    <a href="#" class="btn" th:classappend="'btn-primary'">按钮，使用了th:classappend</a>
+
+## 迭代 th:each
+
+遍历集合使用th:each标签,对于迭代需要说明的是迭代状态(th:each="item, itemStat : ${list}")
+这里itemStat包含一下数据
+
+* 当前迭代索引，从0开始。这是index属性。
+* 当前迭代索引，从1开始。这是count属性。
+* 迭代变量中元素的总量。这是size属性。
+* 每次迭代的变量。这是current元素。
+* 当前迭代是偶数还是奇数。这些是even/odd布尔属性。
+* 当前迭代是否是第一个。这是first布尔属性。
+* 当前迭代是否是最后一次。这是last布尔属性。
+
+**示例**
+
+```
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>姓名</th>
+            <th>年龄</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="user, userStat : ${users}" th:class="${userStat.odd}? 'odd'">
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.age}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<div th:each="user, userStat : ${users}">
+    <span th:text="|Index: ${userStat.index}, Size: ${userStat.size}, Current: ${userStat.current}|"></span>
+</div>
+```
+
+## 条件判断
 

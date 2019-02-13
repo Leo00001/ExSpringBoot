@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Thymeleaf示例</title>
     <!-- ~是域名下根路径，都则回事访问地址下的路径 -->
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{~/assets/app/css/common.css}">
 
     <style>
@@ -73,10 +74,6 @@
         <p th:class="middle-font" th:text="|姓名: *{name}|"></p>
     </div>
 
-    <h2>th:each遍历集合</h2>
-    <div th:each="user: ${users}">
-        <p th:text="|姓名: *{user.name}|"></p>
-    </div>
     <h2>th:href</h2>
     <div>
         <a href="https://www.baidu.com" th:href="@{search/{user}(name=${user.name}, user='陌生人')}">用户信息</a>
@@ -91,6 +88,31 @@
 <div>
     <h3>th:attr</h3>
     <p th:attr="style='color: #FF8877'">这里使用了th:attr修改字颜色</p>
+    <p th:style="'color: #FF8877'">这里使用了th:style修改字颜色</p>
+    <p th:onclick="|javascript:void(alert('ccc'))|">th:onclick效果，点击试试</p>
+
+    <a href="#" class="btn" th:classappend="'btn-primary'">按钮，使用了th:classappend</a>
+</div>
+
+<div style="margin-top: 1.5rem;">
+    <h3>遍历</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>姓名</th>
+                <th>年龄</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user, userStat : ${users}" th:class="${userStat.odd}? 'odd'">
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.age}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div th:each="user, userStat : ${users}">
+        <span th:text="|Index: ${userStat.index}, Size: ${userStat.size}, Current: ${userStat.current}|"></span>
+    </div>
 </div>
 
 </body>
