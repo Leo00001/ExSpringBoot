@@ -1,11 +1,23 @@
-body {
-
+.content {
+    /*内容水平居中*/
     margin: 0 auto;
-    width: 720px;
+    width: 790px;
+}
+
+.header {
+    background-color: cadetblue;
+    height: 100px;
+    /*垂直居中*/
+    line-height: 100px;
+}
+
+.header img {
+    margin-left: 100px;
+    height: 80px;
 }
 
 a.btn {
-   /*去掉下划线*/
+    /*去掉下划线*/
     text-decoration: none;
 }
 

@@ -293,3 +293,147 @@ Thymeleaf 中可以使用运算符`+` `-` `*` `/` `%` `==` `!=`  `?:`
 
 ## 条件判断
 
+### th:if
+
+条件判断该th:if属性不仅会评估布尔条件。它的功能稍微超出了它，它将按照true以下规则评估指定的表达式：
+
+- 如果value不为null：
+- 如果value是布尔值，则为true。
+- 如果value是数字且不为零
+- 如果value是一个字符且不为零
+- 如果value是String并且不是“false”，“off”或“no”
+- 如果value不是布尔值，数字，字符或字符串。
+- （如果value为null，则th：if将计算为false
+
+**示例**
+
+```
+<div th:if="${users.size() &gt; 3}">
+    <p>用户数目大于3</p>
+    <p th:text="${user.bankCardList}?''">用户null</p>
+</div>
+```
+
+### th:switch / th:case
+
+分支判断
+
+**示例**
+
+```
+<div th:switch="${user.role}">
+  <p th:case="'admin'">User is an administrator</p>
+  <p th:case="#{roles.manager}">User is a manager</p>
+</div>
+```
+
+
+## 模板布局
+
+对于页面中的通用布局可以整理为模板布局，在需要的地方引入
+
+### 模板片段
+
+定义一个片段使用th:fragment,例如：
+
+```
+新建一个模板module.html
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="header>
+    <h1>Hello</h1>
+</div>
+</body>
+</html>
+
+```
+
+使用片段也比较简单通过使用th:insert,th:replace来放在想要插入或者替换的位置，例如：
+
+```
+<div th:replace="~{module :: header}">
+</div>
+
+渲染结果：
+<div>
+    <h1>Hello</h1>
+</div>
+
+```
+
+**引入片段的语法说明**
+
+引入模板片段可以使用一下方式
+
+*  th:insert="~{模板 :: 片段名称}"
+*  th:insert="~{:: 片段名称}"
+*  th:insert="~{模板}"
+
+当然这里的~{}也可以省略
+
+_ps:_
+
+如果目标模板和模板在同级目录下可以直接引用模板~{模板 :: 片段},如果不在统一目录下，例如如下目录：
+
+```
+--template
+    --common
+        --module.html
+    home.html
+```
+当home.html引用module.html模板中的片段时候就需要指定目录，默认模板路径在根目录下,需要如下的引用方式
+
+    <div th:replace="~{..templates/common/header}"></div>
+    
+**th:insert 与 th:replace**
+
+从字面可以理解一个是插入, 一个是替换.效果如下：
+
+```
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="header">
+    <img th:src="@{~/assets/app/image/logo.png}" th:alt-title="Logo">
+</div>
+
+<div th:insert=":: header"></div>
+<div th:replace=":: header"></div>
+</body>
+</html>
+
+渲染后效果
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div>
+    <img th:src="@{~/assets/app/image/logo.png}" th:alt-title="Logo">
+</div>
+
+//insert效果
+<div>
+    <div>
+        <img th:src="@{~/assets/app/image/logo.png}" th:alt-title="Logo">
+    </div>
+</div>
+// replace效果
+<div>
+    <img th:src="@{~/assets/app/image/logo.png}" th:alt-title="Logo">
+</div>
+</body>
+</html>
+
+```
+        
+### 模板片段参数
+
+片段可以像函数一样指定参数，通过th:insert或者th:replace 来传入参数
+
+**示例：**
+54321
+
+
+
