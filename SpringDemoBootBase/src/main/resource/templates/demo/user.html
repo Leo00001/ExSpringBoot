@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<head th:replace="../templates/common/common-head :: header(~{::title}, ~{::link}, _, ~{::style})">
+    <meta charset="utf-8" th:remove="all">
     <title>Thymeleaf示例</title>
-    <link th:replace="..templates/common/module :: common-link">
+    <!--<link th:replace="../templates/common/module :: common-link">-->
     <!-- ~是域名下根路径，都则回事访问地址下的路径 -->
     <link rel="stylesheet" th:href="@{~/assets/app/css/common.css}">
 
@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<div th:replace="~{..templates/common/header}"></div>
+<div th:replace="~{../templates/common/header}"></div>
 <div class="content">
 
     <div>
@@ -97,7 +97,7 @@
         <a href="#" class="btn" th:classappend="'btn-primary'">按钮，使用了th:classappend</a>
     </div>
 
-    <div style="margin-top: 1.5rem;">
+    <div th:class="title-3">
         <h3>遍历</h3>
         <table class="table table-bordered">
             <thead>
@@ -116,6 +116,32 @@
         <div th:each="user, userStat : ${users}">
             <span th:text="|Index: ${userStat.index}, Size: ${userStat.size}, Current: ${userStat.current}|"></span>
         </div>
+    </div>
+
+    <div th:class="title-3">
+        <h3>带参数的模板</h3>
+        <div th:replace="../templates/common/module :: traversalList(${users})"></div>
+    </div>
+
+    <div th:class="title-3" th:with="twoUser=${users[1]}">
+        <h3>th:with创建局部变量</h3>
+        <p th:text="${twoUser.name}"></p>
+
+        <h4>代码</h4>
+
+                    <!--/*/
+                    <div th:class="title-3" th:with="twoUser=${users[1]}">
+                        <h3>th:with创建局部变量</h3>
+                        <p th:text="${twoUser.name}"></p>
+                    </div>
+                    /*/-->
+    </div>
+
+    <div th:class="title-3">
+        <h3>内联</h3>
+        <p>时间：[[${#dates.format(nowTime, 'yyyy-MM-dd')}]]</p>
+        <p>转义：[(#{user.welcome})]</p>
+        <p>非转义：[[#{user.welcome}]]</p>
     </div>
 </div>
 </body>

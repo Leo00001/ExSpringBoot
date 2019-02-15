@@ -384,7 +384,7 @@ _ps:_
 ```
 当home.html引用module.html模板中的片段时候就需要指定目录，默认模板路径在根目录下,需要如下的引用方式
 
-    <div th:replace="~{..templates/common/header}"></div>
+    <div th:replace="~{../templates/common/header}"></div>
     
 **th:insert 与 th:replace**
 
@@ -427,13 +427,282 @@ _ps:_
 </html>
 
 ```
-        
+   
+**th:block的使用**
+
+有时候我们引入的片段不向包含片段最外层的标签，或者我们吸纳该将`<head>`中的一些`<link>`标签
+放在模板中，这时候就需要`th:block`来帮助我们完成.配合th:insert或者th:replace就可以完成.
+
+**示例**
+
+模板片段
+```
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:fragment="common-link">
+        <link href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.css" rel="stylesheet">
+    </th:block>
+</head>
+...
+</html>
+```
+
+引入片段
+
+```
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="../templates/common/module :: common-link">
+</head>
+...
+
+```
+     
 ### 模板片段参数
 
 片段可以像函数一样指定参数，通过th:insert或者th:replace 来传入参数
 
 **示例：**
-54321
+
+模板片段
+```
+<div th:fragment="list(datas)">
+    <div th:each="item : ${data}">
+        <p th:text="${item.name}"></p>
+    </div>
+</div>
+
+```
+
+引用模板片段
+```
+<div th:class="title-3">
+    <h3>带参数的模板</h3>
+    <div th:replace="../templates/common/module :: traversalList(${users})"></div>
+</div>
+```
+
+### 模板片段高级使用
+
+对于这个模板片段的高级使用，我这样理解的，就是将目标页面中的标签作为模板替换模板中指定的块区域.
+
+_模板片段需要这样定义_：
+```
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header(title, links, headJs, headStyle)">
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Spring示例程序</title>
+    <link type="text/css" href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.css" rel="stylesheet">
+
+    <th:block th:replace="${links}" />
+
+
+    <th:block th:replace="${headJs}"/>
+
+    <th:block th:replace="${headStyle}"/>
+</head>
+
+
+</html>
+```
+这个模板片段类似上面的参数模板片段，而这些参数也可以理解果模板片段，我们通过th:replace来应用模板
+
+_使用模板片段_：
+```
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="../templates/common/common-head :: header(~{::title}, ~{::link}, _, ~{::style})">
+    <title>Thymeleaf示例</title>
+    <!--<link th:replace="../templates/common/module :: common-link">-->
+    <!-- ~是域名下根路径，都则回事访问地址下的路径 -->
+    <link rel="stylesheet" th:href="@{~/assets/app/css/common.css}">
+
+    <style>
+        .middle-font {
+            font-size: 1.2rem;
+            color: darkgreen;
+            font-family: "WenQuanYi Micro Hei", monospace;
+        }
+    </style>
+</head>
+...
+```
+应用该模板时候参数语法就类似应用模板片段的方式~{::替换的参数}，这里我们需要替换title,link和style.
+这样渲染以后的效果如下：
+```
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf示例</title>
+    <link type="text/css" href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/assets/app/css/common.css">
+
+    <style>
+        .middle-font {
+            font-size: 1.2rem;
+            color: darkgreen;
+            font-family: "WenQuanYi Micro Hei", monospace;
+        }
+    </style>
+</head>
+```
+这里可以看到目标页面中的`title,link,style`替换了模板片段中的`title,link,style`,假使模板中没有定义
+`style`参数，那么渲染以后的页面也不会有style,即时目标页面含有`style`
+
+如果在目标页面没有需要传入的参数，如上示例中`headJs`参数，我们可以传入`空片段(~{})`或者使用`无操作标识(_)`
+
+_ps:
+1.模板片段的插入或替换还可以根据条件来决定是否应用模板片段
+2.我们还以应用整个html作为通用模板(包含了页眉页脚)，应用到目标页面_
+
+
+
+### 模板删除th:remove
+
+`th:remove`标签主要是用在模拟页面展示的时候，在正式渲染的时候不展示模拟数据，
+
+**示例**
+
+```
+<table>
+    <tr>
+        <th>Title1</th>
+        <th>Title2</th>
+    </tr>
+    <tr th:each="item : ${list}">
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.age}"></td>
+    </tr>
+    <tr th:remove="all">
+        <td>站三</td>
+        <td>19</td>
+    </tr>
+    <tr th:remove="all">
+            <td>站三</td>
+            <td>19</td>
+     </tr>
+</table>
+
+```
+
+这样如果你直接打开该html会显示(源代码)
+
+```
+<table>
+    <tr>
+        <th>Title1</th>
+        <th>Title2</th>
+    </tr>
+    <tr>
+        <td>站三</td>
+        <td>19</td>
+    </tr>
+    <tr>
+        <td>站三</td>
+        <td>19</td>
+     </tr>
+</table>
+```
+
+而渲染后
+
+```
+<table>
+    <tr>
+        <th>Title1</th>
+        <th>Title2</th>
+    </tr>
+    <tr>
+        <td>User`</td>
+        <td>10</td>
+    </tr>
+    <tr>
+        <td>User2</td>
+        <td>9</td>
+     </tr>
+</table>
+```
+
+**th:remove使用的值**
+
+- all包含该标签以及所有子元素
+- body：不要删除包含标记，但删除其所有子标记。
+- tag：删除包含标记，但不删除其子项。
+- all-but-first：删除除第一个之外的所有包含标记的子项。
+- none： 没做什么。此值对于动态评估很有用。
+
+## 局部变量
+
+我们可以使用`th:with`临时创建局部变量，并在子元素中使用该变量
+
+**示例**
+
+```
+<div th:class="title-3" th:with="twoUser=${users[1]}" >
+    <h3>th:with创建局部变量</h3>
+    <p th:text="${twoUser.name}"></p>
+</div>
+```
+[更多语法](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#local-variables)
+
+当一个标签使用了多个th:*,这就涉及到执行的优先级,thymeleaf有自己的优先级顺序
+参考[Thymeleaf属性优先级](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#attribute-precedence)
+
+## 代码注释
+
+* 原型不显示，但是会被thymeleaf解析的注释语法
+
+```
+<!--/*/
+<div th:class="title-3" th:with="twoUser=${users[1]}">
+    <h3>th:with创建局部变量</h3>
+    <p th:text="${twoUser.name}"></p>
+</div>
+/*/-->
+```
+
+* 不会被thymeleaf解析但是会在原型上显示的语法
+
+```
+<!--/*-->
+<div th:class="title-3" th:with="twoUser=${users[1]}">
+    <h3>th:with创建局部变量</h3>
+    <p th:text="${twoUser.name}"></p>
+</div>
+<!--*/-->
+```
+
+## 内联
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

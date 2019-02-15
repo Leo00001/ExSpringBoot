@@ -10,5 +10,9 @@
 </head>
 <body>
 
+<div th:fragment="traversalList (dataList)" th:each="item : ${dataList}">
+    <p th:text="|模板片段参数 ${item.name}|"></p>
+</div>
+
 </body>
 </html>
