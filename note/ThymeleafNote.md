@@ -677,7 +677,55 @@ _ps:
 
 ## 内联
 
+内联的语法是使用`[[...]]`来处理，在上面我们看到的Thymeleaf使用都是应用在标签的属性上.
+而内联可以让我们在很多地方都可以使用Thymeleaf
 
+### 表达式内联
+
+看下示例：
+
+```
+//user.welcome=欢迎来到<b>北京</b>
+<div th:class="title-3">
+    <h3>表达式内联</h3>
+    <p>时间：[[${#dates.format(nowTime, 'yyyy-MM-dd')}]]</p>
+    <p>转义：[(#{user.welcome})]</p>
+    <p>非转义：[[#{user.welcome}]]</p>
+</div>
+```
+我们可以将上下文中的内容应用与标签的`text`中,注意到还有`[(...)]`的使用，这个与`[[...]]`
+差异在是否进行转义.转义以后北京显示效果就是加粗的，非转义的则显示`<b>北京</b>`
+
+### Js中使用内联
+
+使用示例
+
+```
+<div th:class="title-3" id="js-inline">
+    <h3>javascript内联</h3>
+</div>
+
+<script th:inline="javascript">
+
+    window.onload = function () {
+        let userJson = [[${user}]] //1
+        let userJsonArray = [[${users}]] //2
+    
+        let jsInlineDiv = document.getElementById("js-inline");
+        let jsInlineP = document.createElement("p");
+        jsInlineP.innerHTML = "[(#{user.welcome})]";
+        jsInlineDiv.appendChild(jsInlineP);
+    }
+
+</script>
+```
+在实践中发现`[()]`在js中没有起到转义效果,所以我这里就将内容作为innerHTML
+
+**序列化**
+
+在js中使用Thymeleaf内联会自动将对象集合转换为json对象或者数组如上示例的`userJson`和`userJsonArray`
+
+### Css中使用内联
 
 
 

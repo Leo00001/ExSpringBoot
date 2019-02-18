@@ -126,23 +126,35 @@
     <div th:class="title-3" th:with="twoUser=${users[1]}">
         <h3>th:with创建局部变量</h3>
         <p th:text="${twoUser.name}"></p>
-
-        <h4>代码</h4>
-
-                    <!--/*/
-                    <div th:class="title-3" th:with="twoUser=${users[1]}">
-                        <h3>th:with创建局部变量</h3>
-                        <p th:text="${twoUser.name}"></p>
-                    </div>
-                    /*/-->
     </div>
 
     <div th:class="title-3">
-        <h3>内联</h3>
+        <h3>表达式内联</h3>
         <p>时间：[[${#dates.format(nowTime, 'yyyy-MM-dd')}]]</p>
         <p>转义：[(#{user.welcome})]</p>
         <p>非转义：[[#{user.welcome}]]</p>
     </div>
+
+    <div th:class="title-3" id="js-inline">
+        <h3>javascript内联</h3>
+    </div>
 </div>
+
+<script th:inline="javascript">
+
+    window.onload = function () {
+        let jsInlineDiv = document.getElementById("js-inline");
+        let jsInlineP = document.createElement("p");
+        let userJson = [[${user}]]
+        jsInlineP.innerHTML = "[(#{user.welcome})]" + userJson.name;
+        jsInlineDiv.appendChild(jsInlineP);
+        let userJsonArray = [[${users}]]
+        for (let i = 0; i < userJsonArray.length; i++) {
+            jsInlineP = document.createElement("p");
+            jsInlineP.innerHTML = userJsonArray[i].name;
+            jsInlineDiv.appendChild(jsInlineP);
+        }
+    }
+</script>
 </body>
 </html>
