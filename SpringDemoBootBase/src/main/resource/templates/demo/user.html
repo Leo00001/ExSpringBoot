@@ -14,6 +14,11 @@
             font-family: "WenQuanYi Micro Hei", monospace;
         }
     </style>
+    <style th:inline="css">
+        .[[${inlineCss}]] {
+            color: [(${inlineCssColor})];
+        }
+    </style>
 </head>
 <body>
 
@@ -137,6 +142,11 @@
 
     <div th:class="title-3" id="js-inline">
         <h3>javascript内联</h3>
+    </div>
+
+    <div th:class="title-3">
+        <h3>Css内联</h3>
+        <p th:class="${inlineCss}">Css内联样式的效果</p>
     </div>
 </div>
 

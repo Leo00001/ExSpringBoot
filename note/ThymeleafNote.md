@@ -724,11 +724,29 @@ _ps:
 **序列化**
 
 在js中使用Thymeleaf内联会自动将对象集合转换为json对象或者数组如上示例的`userJson`和`userJsonArray`
+这样就更方便我们处理数据。
 
 ### Css中使用内联
 
+目前感觉用处不大，使用方法类似js的内联
 
+示例
 
+```
+pageModel.addAttribute("inlineCss", "color-font");
+pageModel.addAttribute("inlineCssColor", "rgb(200,89,22)");
+
+<style th:inline="css">
+    .[[${inlineCss}]] {
+        color: [(${inlineCssColor})];
+    }
+</style>
+```
+这里有个问题，就是配置的`inlineCssColor,rgb(200,89,22)`在页面渲染的时候`(),`
+都会增加一个转义字符，类似这样:`rgb\(200\,89\,22\)`。这样就无法正常显示样式。
+所以目前看没有什么更多使用的方式
+
+## 
 
 
 

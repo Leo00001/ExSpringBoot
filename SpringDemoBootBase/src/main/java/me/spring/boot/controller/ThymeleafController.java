@@ -42,6 +42,8 @@ public class ThymeleafController {
         pageModel.addAttribute("users", users);
 
         pageModel.addAttribute("user", userInfo);
+        pageModel.addAttribute("inlineCss", "color-font");
+        pageModel.addAttribute("inlineCssColor", "rgb(200,89,22)");
         pageModel.addAttribute(userInfo);
         pageModel.addAttribute("welcomeTemplateKey", "欢迎 \\{0\\} 参观我们公司！");
         pageModel.addAttribute("nowTime", new Date());
