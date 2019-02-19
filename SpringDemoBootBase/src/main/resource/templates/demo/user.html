@@ -148,6 +148,32 @@
         <h3>Css内联</h3>
         <p th:class="${inlineCss}">Css内联样式的效果</p>
     </div>
+
+    <div th:class="title-3">
+        <h3>文本模板</h3>
+        [#th:block th:each="u, uStat : ${users}"]
+            [#th:block th:utext="|${uStat.index}. 姓名: ${u.name}|"/]
+        [/th:block]
+        <p>上面的代码只有开启text模式才可以处理，这里需要在application中配置 <br>
+            <span style="background-color: rgba(255,255,255,0.63); color: burlywood">
+                spring.thymeleaf.suffix=.vm，表明模版文件的后缀是.vm； <br>
+                spring.thymeleaf.mode=text，表明Thymeleaf的工作模式是TEXT模式；
+            </span>
+        </p>
+    </div>
+
+    <div>
+        <table id="usersTable">
+            <tr>
+                <td class="username">Jeremy Grapefruit</td>
+                <td class="usertype">Normal User</td>
+            </tr>
+            <tr>
+                <td class="username">Alice Watermelon</td>
+                <td class="usertype">Administrator</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <script th:inline="javascript">

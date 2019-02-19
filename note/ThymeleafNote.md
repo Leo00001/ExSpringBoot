@@ -746,7 +746,26 @@ pageModel.addAttribute("inlineCssColor", "rgb(200,89,22)");
 都会增加一个转义字符，类似这样:`rgb\(200\,89\,22\)`。这样就无法正常显示样式。
 所以目前看没有什么更多使用的方式
 
-## 
+## 文本模板模式
+
+这个模式在Web项目中不常用，如果你需要配置一些文本模板，并且通过Thymeleaf来作为模板引擎可以使用
+文本模板模式
+
+**示例**
+
+```
+[#th:block th:each="u, uStat : ${users}"]
+    [#th:block th:utext="|${uStat.index}. 姓名: ${u.name}|"/]
+[/th:block]
+```
+
+语法就是通过`[# ...] [/]`来包裹，这里th:block可以省略，如下使用
+
+```
+[# th:each="u, uStat : ${users}"]
+    [# th:utext="|${uStat.index}. 姓名: ${u.name}|"/]
+[/]
+```
 
 
 

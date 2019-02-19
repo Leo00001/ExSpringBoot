@@ -3,6 +3,8 @@ package me.spring.boot;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,5 +36,14 @@ public class ExampleTest {
         Vector<String> vector = new Vector<>();
         vector.add("This is Jack");
         Assert.assertEquals(list, vector);
+    }
+
+    @Test
+    public void testReflectGeneric() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        ArrayList<Integer> list = new ArrayList<>();
+        Method method = list.getClass().getMethod("add", Object.class);
+        method.invoke(list, "Java反射机制实例。");
+
+        System.out.println(list.get(0));
     }
 }
