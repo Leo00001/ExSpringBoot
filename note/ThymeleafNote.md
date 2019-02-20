@@ -766,11 +766,97 @@ pageModel.addAttribute("inlineCssColor", "rgb(200,89,22)");
     [# th:utext="|${uStat.index}. 姓名: ${u.name}|"/]
 [/]
 ```
+要使用文本模板模式需要在application.yaml配置
+    
+    spring.thymeleaf.suffix=.vm //表明模版文件的后缀是.vm
+    spring.thymeleaf.mode=text //表明Thymeleaf的工作模式是TEXT模式
 
 
+## 解偶模板
+
+解偶模板类似xml和xls的组合，这里Spring默认不开启解偶模板模式，需要自己配置
+
+```
+@Configuration
+public class ThymeleafConfig {
 
 
+    private final ThymeleafProperties properties;
 
+    private final ApplicationContext applicationContext;
+
+    ThymeleafConfig(ThymeleafProperties properties,
+                    ApplicationContext applicationContext) {
+        this.properties = properties;
+        this.applicationContext = applicationContext;
+    }
+
+    @PostConstruct
+    public void checkTemplateLocationExists() {
+        boolean checkTemplateLocation = this.properties.isCheckTemplateLocation();
+        if (checkTemplateLocation) {
+            TemplateLocation location = new TemplateLocation(
+                    this.properties.getPrefix());
+            if (!location.exists(this.applicationContext)) {
+
+            }
+        }
+    }
+
+    @Bean
+    public SpringResourceTemplateResolver defaultTemplateResolver() {
+        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+        resolver.setApplicationContext(this.applicationContext);
+        resolver.setPrefix(this.properties.getPrefix());
+        resolver.setSuffix(this.properties.getSuffix());
+        resolver.setTemplateMode(this.properties.getMode());
+        if (this.properties.getEncoding() != null) {
+            resolver.setCharacterEncoding(this.properties.getEncoding().name());
+        }
+        resolver.setCacheable(this.properties.isCache());
+        Integer order = this.properties.getTemplateResolverOrder();
+        if (order != null) {
+            resolver.setOrder(order);
+        }
+        resolver.setCheckExistence(this.properties.isCheckTemplate());
+        resolver.setUseDecoupledLogic(true); // 这行代码开启解偶模板模式
+        return resolver;
+    }
+}
+```
+
+示例：
+
+```
+user.html
+
+<div>
+    <table id="usersTable">
+        <tr>
+            <td class="username">Jeremy Grapefruit</td>
+            <td class="usertype">Normal User</td>
+        </tr>
+        <tr>
+            <td class="username">Alice Watermelon</td>
+            <td class="usertype">Administrator</td>
+        </tr>
+    </table>
+</div>
+```
+在user.html统计目录下创建user.th.xml
+
+```
+<?xml version="1.0"?>
+<thlogic>
+    <attr sel="#usersTable" th:remove="all-but-first">
+        <attr sel="/tr[0]" th:each="user : ${users}">
+            <attr sel="td.username" th:text="${user.name}" />
+            <attr sel="td.usertype" th:text="#{|age ${user.age}|}" />
+        </attr>
+    </attr>
+</thlogic>
+```
+这样就可以将xml与html组合生成网页.[了解更多](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#decoupled-template-logic)
 
 
 
