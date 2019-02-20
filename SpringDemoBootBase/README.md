@@ -82,4 +82,48 @@ logback-classic版本低，推荐使用
 
     spring-profile.active=prod
 
-[Thymeleaf 使用](../note/ThymeleafNote.md)
+## [Thymeleaf 使用](../note/ThymeleafNote.md)
+
+## Web相关配置
+
+旧版本的SpringBoot都是通过继承WebMvcAutoConfigurationAdapter类来复写父类方法来做到修改一些配置信息。
+但是在最新版本中方式被废弃了，如果我们想修改一些SpringBoot默认的配置重写一个Config就可以。
+
+示例：
+
+```
+@Configuration
+public class MvcConfig {
+
+        @Bean
+        public InternalResourceViewResolver defaultViewResolver() {
+        // 配置一些自己的需求
+            InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+            resolver.setPrefix(this.mvcProperties.getView().getPrefix());
+            resolver.setSuffix(this.mvcProperties.getView().getSuffix());
+            return resolver;
+        }
+}
+```
+
+什么可以这么配置呢，我们可以查看WebMvcAutoConfiguration.java的源码可以看到
+
+```
+@Bean
+@ConditionalOnMissingBean // 注1
+public InternalResourceViewResolver defaultViewResolver() {
+    InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+    resolver.setPrefix(this.mvcProperties.getView().getPrefix());
+    resolver.setSuffix(this.mvcProperties.getView().getSuffix());
+    return resolver;
+}
+```
+这注释1的地方配置有`@ConditionalOnMissingBean`注解，这个注解的意思就是
+仅当 BeanFactory 中不包含指定的 bean class 和/或 name 时条件匹配。通俗讲就是
+如果你没有提供一个自定义的Bean，系统就会使用这个默认的，所以我们只需要提供一个自定义的
+在SpringBoot启动时候就会使用自定义的Bean注入替换默认的Bean.所以如果你想修改一些默认的配置
+只需要你查看源码然后复制出来编写你的逻辑就可以了
+
+**如果你想配合更加丰富的功能，那么你就需要实现WebMvcConfigurer接口，复写需要的方法**
+
+                                                 
