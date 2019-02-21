@@ -126,4 +126,28 @@ public InternalResourceViewResolver defaultViewResolver() {
 
 **如果你想配合更加丰富的功能，那么你就需要实现WebMvcConfigurer接口，复写需要的方法**
 
+我们可以`DelegatingWebMvcConfiguration`类会将实现了WebMvcConfig接口的类注入
+
+```
+@Configuration
+public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
+
+	private final WebMvcConfigurerComposite configurers = new WebMvcConfigurerComposite();
+
+
+	@Autowired(required = false)
+	public void setConfigurers(List<WebMvcConfigurer> configurers) {
+		if (!CollectionUtils.isEmpty(configurers)) {
+			this.configurers.addWebMvcConfigurers(configurers);
+		}
+	}
+	
+	....
+```
+关于更多Web配置参看[Spring MVC 基本使用示例](../SpringMVC/README.md)
+
+## Servlet容器配置
+
+
+
                                                  
