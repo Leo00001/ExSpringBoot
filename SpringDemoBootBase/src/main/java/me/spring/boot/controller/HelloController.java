@@ -1,12 +1,15 @@
 package me.spring.boot.controller;
 
 import com.spring.boot.theory.HelloService;
+import me.spring.boot.biz.UserInfo;
 import me.spring.boot.config.BookSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 /**
  * @author baiyu
@@ -44,5 +47,14 @@ public class HelloController {
     @GetMapping("/3")
     public String hello3() {
         return "This is hello from configuration " + helloService.sayHello();
+    }
+
+    @GetMapping(value = "/json", produces = "application/json;charset=utf8")
+    public UserInfo getJson() {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setAge(18);
+        userInfo.setName("张三");
+        userInfo.setBirthday(new Date());
+        return userInfo;
     }
 }

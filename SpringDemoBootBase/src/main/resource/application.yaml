@@ -32,6 +32,10 @@ spring:
   # 配置国际化 可以包括多个，以逗号分隔。每一个ResourceBundle
   messages:
     basename: i18n/messages
+  # 配置jackson 日期格式化，null字段不序列号
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: non_null
 
 # Spring自动配置原理展示
 hello:

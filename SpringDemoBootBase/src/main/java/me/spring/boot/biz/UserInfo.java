@@ -1,5 +1,6 @@
 package me.spring.boot.biz;
 
+import java.util.Date;
 import java.util.List;
 
 public class UserInfo {
@@ -10,6 +11,15 @@ public class UserInfo {
 
     private List<BankCardInfo> bankCardList;
 
+    private Date birthday;
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
 
     public String getName() {
         return name;

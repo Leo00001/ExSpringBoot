@@ -1,6 +1,14 @@
 server:
-  port: 8088
+  port: 8433
   address: 0.0.0.0
+  ssl:
+    enabled: true
+    key-store: classpath:server.jks
+    key-store-password: server123
+    key-store-type: JKS
+    key-alias: server
+  http:
+    port: 8088
 
 # thymeleaf 配置
 spring:
@@ -16,3 +24,6 @@ spring:
     # 所以还是使用默认路径classpath:/templates/这样浏览器无法直接访问，必须通过Controller
     # prefix: classpath:/static/templates/
     suffix: .html
+  #mvc:
+    #favicon:
+      #enabled: false

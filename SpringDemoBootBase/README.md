@@ -150,6 +150,45 @@ public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
 
 Servlet的配置很多，比如端口，回话超时时间等，更多的配置参考*SpringBoot官方文档*[附录](https://docs.spring.io/spring-boot/docs/2.1.3.RELEASE/reference/htmlsingle/#appendix)
 
+### fastjson 替换默认的jackson
+
+添加fastjson引用到pom.xml中
+```
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>fastjson</artifactId>
+    <version>1.2.56</version>
+</dependency>
+```
+
+然后将fastjson消息解析添加到配置中
+
+
+```
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        //fastjson 替换jackson
+        FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
+          //2.定义一个配置，设置编码方式，和格式化的形式
+       FastJsonConfig fastJsonConfig = new FastJsonConfig();
+       //3.设置成了PrettyFormat格式
+       fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat,
+               SerializerFeature.WriteNullBooleanAsFalse,
+               SerializerFeature.WriteNullListAsEmpty,
+               SerializerFeature.WriteNullStringAsEmpty,
+               SerializerFeature.WriteMapNullValue);
+       //4.处理中文乱码问题
+       List<MediaType> fastMediaTypes =  new ArrayList<>();
+       fastMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+       fastConverter.setSupportedMediaTypes(fastMediaTypes);
+
+       //5.将fastJsonConfig加到消息转换器中
+       fastConverter.setFastJsonConfig(fastJsonConfig);
+       // 将fastjson 优先级最高。或者移除jackson 的应用，这样消息转换列表中就只有fastjson
+       converters.add(0, fastConverter);
+    }
+```
+
 ### 自定义错误页面
 
 _方式一_
@@ -220,12 +259,155 @@ src/
 
 ### 替换Tomcat
 
-默认SpringBoot使用Tomcat作为服务器容器，如果想要替换则修改
+默认SpringBoot使用Tomcat作为服务器容器，如果想要替换则修改pom.xml中spring-boot-starter-web引用
+
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+
+<!-- 加入Jett容器 -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jett</artifactId>
+</dependency>
+```
 
 ### https配置
 
+配置ssl可以通过application.yaml配置容器的ssl。如下：
+
+```
+server.ssl.ciphers= # Supported SSL ciphers.
+server.ssl.client-auth= # Client authentication mode.
+server.ssl.enabled=true # Whether to enable SSL support.
+server.ssl.enabled-protocols= # Enabled SSL protocols.
+server.ssl.key-alias= # Alias that identifies the key in the key store.
+server.ssl.key-password= # Password used to access the key in the key store.
+server.ssl.key-store= # Path to the key store that holds the SSL certificate (typically a jks file).
+server.ssl.key-store-password= # Password used to access the key store.
+server.ssl.key-store-provider= # Provider for the key store.
+server.ssl.key-store-type= # Type of the key store.
+server.ssl.protocol=TLS # SSL protocol to use.
+server.ssl.trust-store= # Trust store that holds SSL certificates.
+server.ssl.trust-store-password= # Password used to access the trust store.
+server.ssl.trust-store-provider= # Provider for the trust store.
+server.ssl.trust-store-type= # Type of the trust store.
+```
+
+我们可以看到配置中含有key-store和trust-store，这两个
+一个是进行ssl单向认证，另外一个是双向认证的配置。[更多配置](https://tonysun3544.iteye.com/blog/2265448)
+
+生成证书
+```
+keytool -genkey -alias server -keyalg RSA -keystore server.jks -validity 3650
+输入密钥库口令:  
+再次输入新口令: 
+您的名字与姓氏是什么?
+  [Unknown]:  Leo Liu
+您的组织单位名称是什么?
+  [Unknown]:  Baiyu
+您的组织名称是什么?
+  [Unknown]:  Baiyu
+您所在的城市或区域名称是什么?
+  [Unknown]:  ShiJiazhuang            
+您所在的省/市/自治区名称是什么?
+  [Unknown]:  Hebei
+该单位的双字母国家/地区代码是什么?
+  [Unknown]:  86
+CN=Leo Liu, OU=Baiyu, O=Baiyu, L=ShiJiazhuang, ST=Hebei, C=86是否正确?
+  [否]:  是 
+
+输入 <server> 的密钥口令
+        (如果和密钥库口令相同, 按回车):  
+
+Warning:
+JKS 密钥库使用专用格式。建议使用 "keytool -importkeystore -srckeystore server.jks -destkeystore server.jks -deststoretype pkcs12" 迁移到行业标准格式 PKCS12。
+```
+
+**http转向https**
+
+开启https后，可以通过配置TomcatServletWebServerFactory(2.x)和EmbeddedServletContainerFactory(1.x)来实现
+
+```
+@Configuration
+public class ServerConfig {
+
+    // SpringBoot 2.x
+    @Bean
+    public TomcatServletWebServerFactory servletContainer() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory() {
+
+            @Override
+            protected void postProcessContext(Context context) {
+                SecurityConstraint constraint = new SecurityConstraint();
+                constraint.setUserConstraint("CONFIDENTIAL");
+                SecurityCollection collection = new SecurityCollection();
+                collection.addPattern("/*");
+                constraint.addCollection(collection);
+                context.addConstraint(constraint);
+            }
+        };
+        factory.addAdditionalTomcatConnectors(httpConnector());
+
+        return factory;
+    }
+    
+    //SpringBoot 1.x写法
+    @Bean
+    public EmbeddedServletContainerFactory servletContainer() {
+        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {
+            @Override
+            protected void postProcessContext(Context context) {
+                SecurityConstraint securityConstraint = new SecurityConstraint();
+                securityConstraint.setUserConstraint("CONFIDENTIAL");
+                SecurityCollection collection = new SecurityCollection();
+                collection.addPattern("/*");
+                securityConstraint.addCollection(collection);
+                context.addConstraint(securityConstraint);
+            }
+        };
+
+        tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
+        return tomcat;
+    }
+    
+
+    @Bean
+    public Connector httpConnector() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setScheme("http");
+        //Connector监听的http的端口号
+        connector.setPort(8088);
+        connector.setSecure(false);
+        //监听到http的端口号后转向到的https的端口号
+        connector.setRedirectPort(httpsPort);
+        return connector;
+    }
+}
+```
 
 
+### Favicon配置
 
+服务器网页上的图标，可以通过application.yaml设置不显示
 
-                                                 
+```
+spring:
+    mvc:
+        favicon:
+          enabled: false
+```
+
+替换则直接将图标favicon.ico放在resource目录下即可
+
+## 数据访问
+
+                                               
