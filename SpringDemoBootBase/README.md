@@ -148,6 +148,84 @@ public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
 
 ## Servlet容器配置
 
+Servlet的配置很多，比如端口，回话超时时间等，更多的配置参考*SpringBoot官方文档*[附录](https://docs.spring.io/spring-boot/docs/2.1.3.RELEASE/reference/htmlsingle/#appendix)
+
+### 自定义错误页面
+
+_方式一_
+
+在定义错误页面需要实现EmbeddedServletContainerCustomizer(SpringBoot1.x)、WebServerFactoryCustomizer<WebServerFactoryCustomizer<ConfigurableWebServerFactory>>(SpringBoot2.x)
+
+更多参考[官方文档](https://docs.spring.io/spring-boot/docs/2.1.3.RELEASE/reference/htmlsingle/#boot-features-programmatic-embedded-container-customization)
+
+```
+@Component
+public class MeServletConfig implements WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
+
+
+    @Override
+    public void customize(ConfigurableWebServerFactory factory) {
+
+        //配置错误页面
+        Set<ErrorPage> errorPages = new HashSet<>();
+        errorPages.add(new ErrorPage(HttpStatus.NOT_FOUND, "error/404.html"));
+
+        factory.setErrorPages(errorPages);
+    }
+}
+```
+
+这样配置，404页面配置在`resource/static/error/404.html`
+
+_方式二_
+
+对于SpringMVC项目可以配置实现`ErrorViewResolver`接口处理异常
+
+**示例**
+
+```
+@Bean
+public ErrorViewResolver errorViewResolver() {
+
+    return new CustomErrorPageViewResolver();
+}
+
+private static class CustomErrorPageViewResolver implements ErrorViewResolver {
+
+    @Override
+    public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
+        return new ModelAndView("error/404r");
+    }
+}
+```
+
+
+_方式三_
+
+SpringMVC对于默认的模板(thymeleaf, freeMarker)，会默认定向到templates/error/目录下，只要
+在该目录下创建对应的错误状态页面就可以
+
+**示例**
+```
+src/
+ +- main/
+     +- java/
+     |   + <source code>
+     +- resources/
+         +- public/
+             +- error/
+             |   +- 404.html
+             +- <other public assets>
+```
+
+### 替换Tomcat
+
+默认SpringBoot使用Tomcat作为服务器容器，如果想要替换则修改
+
+### https配置
+
+
+
 
 
                                                  
