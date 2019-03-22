@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * 配置http自动定向到https
  */
-@Configuration
+//@Configuration
 public class ServerConfig {
 
     // 在某配置类中添加如下内容

@@ -22,19 +22,30 @@
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
 <script type="text/javascript">
 
-    let stompClient = null
+    let stompClient = null;
 
     function connect() {
-
+        console.log("connect!");
+        let socket = new SockJS("/endpointBaiyu");
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe("/topic/getResponse", function (response) {
+                console.log(response);
+            })
+        })
     }
 
 
     function disconnect() {
-
+        if (stompClient != null) {
+            stompClient.disconnect();
+        }
+        console.log("Disconnected!");
     }
 
     function sendMsg() {
-
+        let content = $("#content").val();
+        stompClient.send("/welcome", {}, JSON.stringify({'content': content}));
     }
 </script>
 </body>
