@@ -10,12 +10,13 @@ import java.util.Objects;
  */
 public class Product implements Serializable {
 
+    private int id;
 
-    private String name;
+    private String pro_name;
 
     private float price;
 
-    private String description;
+    private String proDescription;
 
     private String thumbImage;
 
@@ -23,24 +24,49 @@ public class Product implements Serializable {
     }
 
     public Product(String name, String description) {
-        this.name = name;
-        this.description = description;
+        this.pro_name = name;
+        this.proDescription = description;
     }
 
-    public String getName() {
-        return name;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPro_name() {
+        return pro_name;
+    }
+
+    public void setPro_name(String pro_name) {
+        this.pro_name = pro_name;
     }
 
     public float getPrice() {
         return price;
     }
 
-    public String getDescription() {
-        return description;
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public String getProDescription() {
+        return proDescription;
+    }
+
+    public void setProDescription(String proDescription) {
+        this.proDescription = proDescription;
     }
 
     public String getThumbImage() {
         return thumbImage;
+    }
+
+    public void setThumbImage(String thumbImage) {
+        this.thumbImage = thumbImage;
     }
 
     @Override
@@ -49,13 +75,13 @@ public class Product implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
         return Float.compare(product.price, price) == 0 &&
-                Objects.equals(name, product.name) &&
-                Objects.equals(description, product.description) &&
+                Objects.equals(pro_name, product.pro_name) &&
+                Objects.equals(proDescription, product.proDescription) &&
                 Objects.equals(thumbImage, product.thumbImage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, price, description, thumbImage);
+        return Objects.hash(pro_name, price, proDescription, thumbImage);
     }
 }

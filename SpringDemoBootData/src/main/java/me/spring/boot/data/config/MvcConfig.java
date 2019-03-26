@@ -31,7 +31,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/product").setViewName("product/list");
+        registry.addViewController("/product/list").setViewName("product/list");
     }
 
     @Bean
