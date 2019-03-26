@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-demo-boot-base</artifactId>
-    <packaging>pom</packaging>
+
 
     <dependencies>
 
@@ -73,10 +73,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <fork>true</fork>
-                </configuration>
+                <version>2.1.3.RELEASE</version>
             </plugin>
         </plugins>
     </build>
+
 </project>
