@@ -3,9 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <title>产品列表</title>
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet">
+
+    <style>
+        .content {
+            margin: 0 auto;
+            width: 790px;
+        }
+
+        .operation-col {
+            margin: 2em 0;
+        }
+
+    </style>
 </head>
 <body>
 
-<h1>产品列表页面</h1>
+<div class="content">
+    <div class="operation-col">
+        <button th:text="添加" class="btn btn-primary pro-a"></button>
+    </div>
+    <h1>产品列表页面</h1>
+
+    <table class="table product">
+        <tr>
+            <th>名称</th>
+            <th>描述</th>
+            <th>价格</th>
+            <th>操作</th>
+        </tr>
+    </table>
+</div>
+
+
+<script src="https://unpkg.com/axios/dist/axios.js"></script>
+<script src="https://cdn.bootcss.com/rxjs/6.3.3/rxjs.umd.js"></script>
+
+<script>
+
+    // 引入方法
+    const {fromEvent} = rxjs;
+    const {throttleTime, map} = rxjs.operators;
+    const {create} = rxjs.Observable;
+
+    /**
+     * rxJs 监听页面加载完成
+     */
+    fromEvent(window, "load").subscribe(ready());
+
+    function ready() {
+        console.log("This page load finish");
+        bindEvent();
+        loadProductList();
+    }
+
+    /**
+     * 绑定事件
+     */
+    function bindEvent() {
+        fromEvent(document.querySelector(".pro-a"), "click")
+            .pipe(
+                // 防抖处理
+                throttleTime(1000)
+            )
+            .subscribe(() => console.log("add product"));
+    }
+
+    /**
+     *=================加载产品列表
+     */
+    function loadProductList() {
+        create(function subscribe(observer) {
+            axios.get('/data/jdbc/query/bean')
+                .then(function (response) {
+                    observer.next(response.data)
+                })
+                .catch(function (error) {
+                    observer.error(error)
+                });
+        }).pipe(
+            map(list => {
+                let productListTable = [];
+                for (let i = 0; i < list.length; i++) {
+                    productListTable.push("<tr>");
+                    productListTable.push("<td>");
+                    productListTable.push(list[i].pro_name);
+                    productListTable.push("</td>");
+                    productListTable.push("<td>");
+                    productListTable.push(list[i].proDescription);
+                    productListTable.push("</td>");
+                    productListTable.push("<td>");
+                    productListTable.push(list[i].price);
+                    productListTable.push("</td>");
+                    productListTable.push("<td><a class='pro-m' href='#'>修改</a>&nbsp;&nbsp;<a class='pro-d' href='#'>删除</a></td>");
+                    productListTable.push("</tr>");
+                }
+                return productListTable.join("");
+            })
+        ).subscribe(result => {
+            console.log(result);
+            document.querySelector("table.product").innerHTML += result;
+        }, error => console.log(error));
+    }
+</script>
 </body>
 </html>

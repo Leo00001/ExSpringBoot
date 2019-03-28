@@ -20,14 +20,6 @@ public class Product implements Serializable {
 
     private String thumbImage;
 
-    public Product() {
-    }
-
-    public Product(String name, String description) {
-        this.pro_name = name;
-        this.proDescription = description;
-    }
-
 
     public int getId() {
         return id;
