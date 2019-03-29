@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 public class Product implements Serializable {
 
-    private int id;
+    private int proId;
 
     private String pro_name;
 
@@ -21,12 +21,12 @@ public class Product implements Serializable {
     private String thumbImage;
 
 
-    public int getId() {
-        return id;
+    public int getProId() {
+        return proId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProId(int proId) {
+        this.proId = proId;
     }
 
     public String getPro_name() {

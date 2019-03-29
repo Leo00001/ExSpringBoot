@@ -2,13 +2,13 @@ package me.spring.boot.data.controller;
 
 import me.spring.boot.data.biz.JdbcUserInfo;
 import me.spring.boot.data.biz.Product;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.beans.Introspector;
@@ -23,6 +23,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/data/jdbc")
 public class JdbcTemplateController {
+
+    Logger logger = LoggerFactory.getLogger(JdbcTemplateController.class.getSimpleName());
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -39,7 +41,7 @@ public class JdbcTemplateController {
     @GetMapping(value = "/query/bean", produces = "application/json;charset=utf8")
     @ResponseBody
     public List<Product> listProduct() {
-        String sql = "select pro_name, pro_description, price from al_product";
+        String sql = "select pro_id, pro_name, pro_description, price from al_product";
         // public <T> List<T> queryForList(String sql, Class<T> elementType)
         // 仅仅支持单个列 Class 支持String Boolean... 参考:JdbcUtils.getResultSetValue
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Product.class));
@@ -57,4 +59,27 @@ public class JdbcTemplateController {
         String sql = "select * from al_user_info";
         return jdbcTemplate.query(sql, new JdbcUserInfo.JdbcUserInfoRowMapper());
     }
+
+    @PostMapping("/save")
+    public String save(Product product) {
+        if (product.getProId() == 0) {
+            String insertSql = "insert into al_product (pro_name, pro_description, price) values(?, ?, ?)";
+            int code = jdbcTemplate.update(insertSql, product.getPro_name(), product.getProDescription(), product.getPrice());
+            logger.info("save a product result : " + code);
+        } else {
+            String updateSql = "update al_product set pro_name = ?, pro_description = ?, price = ? where pro_id = ?";
+            int code = jdbcTemplate.update(updateSql, product.getPro_name(), product.getProDescription(), product.getPrice(), product.getProId());
+            logger.info("update a product result : " + code);
+        }
+        return "redirect:/product/list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") int id) {
+        String deleteSql = "delete from al_product where pro_id = ?";
+        int code = jdbcTemplate.update(deleteSql, id);
+        logger.info("save a product result : " + code);
+        return "redirect:/product/list";
+    }
+
 }
