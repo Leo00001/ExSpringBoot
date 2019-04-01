@@ -34,3 +34,8 @@ spring:
       max-idle: 8
       min-idle: 8
       initial-size: 10
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true

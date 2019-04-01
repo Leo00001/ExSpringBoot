@@ -860,7 +860,11 @@ user.html
 
 
 
+## 常见问题
 
+th：onclick中传入参数需要配置[[]]
+
+      <a href="#" th:onclick="updateProduct([[${address}]])">修改</a>
 
 
 

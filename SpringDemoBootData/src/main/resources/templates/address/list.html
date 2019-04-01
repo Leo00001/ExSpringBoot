@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>地址列表</title>
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet">
+
+    <style>
+        .content {
+            margin: 0 auto;
+            width: 790px;
+        }
+
+        .operation-col {
+            margin: 2em 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <div class="operation-col">
+        <button th:text="添加" class="btn btn-primary pro-a" data-toggle="modal" data-target="#myModal"></button>
+    </div>
+    <h1>地址列表页面</h1>
+
+    <table class="table product">
+        <tr>
+            <th>省份</th>
+            <th>地市</th>
+            <th>手机号</th>
+            <th>收货人</th>
+            <th>操作</th>
+        </tr>
+
+        <tr th:each="address, state: ${list}" th:class="${state.odd}? 'odd'">
+            <td th:text="${address.province}"></td>
+            <td th:text="${address.city}"></td>
+            <td th:text="${address.mobile}"></td>
+            <td th:text="${address.name}"></td>
+            <td>
+                <a href="#" th:onclick="updateProduct([[${address}]])">修改</a>
+                <a href="#">删除</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <form class="modal-content" method="post" action="/data/jpa/save">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">添加产品</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="u-province">省份</label>
+                    <input type="text" class="form-control" id="u-province" name="province" placeholder="省份">
+                </div>
+                <div class="form-group">
+                    <label for="u-city">地市</label>
+                    <input type="text" class="form-control" id="u-city" name="city"
+                           placeholder="地市">
+                </div>
+                <div class="form-group">
+                    <label for="u-mobile">手机号</label>
+                    <input type="text" class="form-control" id="u-mobile" name="mobile" placeholder="手机号">
+                </div>
+                <div class="form-group">
+                    <label for="u-name">收货人</label>
+                    <input type="text" class="form-control" id="u-name" name="name" placeholder="收货人">
+                </div>
+                <div class="form-group">
+                    <label for="u-postcode">邮编</label>
+                    <input type="text" class="form-control" id="u-postcode" name="postCode" placeholder="邮编">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" th:type="submit">提交</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js"></script>
+<script>
+
+    /**
+     * 修改产品信息
+     * @param product
+     */
+    function updateProduct(address) {
+        alert(address)
+        // console.log(product.proId)
+        // document.querySelector("#pro-name").value = product.pro_name;
+        // document.querySelector("#pro-description").value = product.proDescription;
+        // document.querySelector("#pro-price").value = product.price;
+        // let proIdNode = document.createElement("input");
+        // proIdNode.setAttribute("name", "proId")
+        // proIdNode.value = product.proId;
+        // proIdNode.id = "pro-id";
+        // proIdNode.style.display = "none";
+        // document.querySelector("div.modal-body").appendChild(proIdNode);
+        // $('#myModal').modal('show');
+    }
+</script>
+</body>
+</html>

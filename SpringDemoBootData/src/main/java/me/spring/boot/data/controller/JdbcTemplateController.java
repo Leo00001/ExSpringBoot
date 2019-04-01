@@ -24,7 +24,7 @@ import java.util.Map;
 @RequestMapping("/data/jdbc")
 public class JdbcTemplateController {
 
-    Logger logger = LoggerFactory.getLogger(JdbcTemplateController.class.getSimpleName());
+    private Logger logger = LoggerFactory.getLogger(JdbcTemplateController.class.getSimpleName());
 
     @Resource
     private JdbcTemplate jdbcTemplate;

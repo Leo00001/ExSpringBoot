@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * <p>
  * 数据库配置
  */
-//@Configuration
-//@EnableJpaRepositories("me.spring.boot.data.repo")
-public class DbConfig {
+@Configuration
+@EnableJpaRepositories("me.spring.boot.data.repo")
+public class JpaConfig {
 
 
 }
