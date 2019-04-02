@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "book2",
+      "type": "me.spring.boot.config.BookSetting",
+      "sourceType": "me.spring.boot.config.BookSetting"
+    }
+  ],
+  "properties": [
+    {
+      "name": "book2.author",
+      "type": "java.lang.String",
+      "sourceType": "me.spring.boot.config.BookSetting"
+    },
+    {
+      "name": "book2.name",
+      "type": "java.lang.String",
+      "sourceType": "me.spring.boot.config.BookSetting"
+    }
+  ],
+  "hints": []
+}

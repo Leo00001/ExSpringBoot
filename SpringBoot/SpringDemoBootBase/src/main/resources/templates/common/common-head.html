@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header(title, links, headJs, headStyle)">
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Spring示例程序</title>
+    <link type="text/css" href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.css" rel="stylesheet">
+    <!--网站图标配置-->
+    <!--<link rel="shortcut icon" href="@{~/}">-->
+
+    <th:block th:replace="${links}" />
+
+
+    <th:block th:replace="${headJs}"/>
+
+    <th:block th:replace="${headStyle}"/>
+</head>
+
+
+</html>

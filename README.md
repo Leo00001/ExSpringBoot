@@ -4,4 +4,4 @@
 
 [SpringMVC](./SpringMVC/README.md)
 
-[SpringBoot 自定义配置](./SpringDemoBootTheory/README.md)
+[SpringBoot 自定义配置](SpringBoot/SpringDemoBootTheory/README.md)

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+
+    <th:block th:fragment="common-link">
+        <link href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.css" rel="stylesheet">
+    </th:block>
+</head>
+<body>
+
+<div th:fragment="traversalList (dataList)" th:each="item : ${dataList}">
+    <p th:text="|模板片段参数 ${item.name}|"></p>
+</div>
+
+</body>
+</html>

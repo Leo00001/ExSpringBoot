@@ -1,0 +1,30 @@
+.content {
+    /*内容水平居中*/
+    margin: 0 auto;
+    width: 790px;
+}
+
+.header {
+    background-color: cadetblue;
+    height: 100px;
+    /*垂直居中*/
+    line-height: 100px;
+}
+
+.header img {
+    margin-left: 100px;
+    height: 80px;
+}
+
+.title-3 {
+    margin-top: 1.5rem;
+}
+
+a.btn {
+    /*去掉下划线*/
+    text-decoration: none;
+}
+
+tr.odd {
+    background-color: burlywood;
+}

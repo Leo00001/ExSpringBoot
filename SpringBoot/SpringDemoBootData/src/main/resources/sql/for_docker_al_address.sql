@@ -1,0 +1,1 @@
+INSERT INTO for_docker.al_address (id, city, detail, mobile, name, post_code, province, uname) VALUES (1, '石家庄', '盛和广场座1005', '13803110222', '', '10098', '河北省', '大帅哥');

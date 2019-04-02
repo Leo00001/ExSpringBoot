@@ -1,0 +1,2 @@
+INSERT INTO for_docker.al_user_info (u_id, u_name, u_account, u_password) VALUES (1, '张三', 'zhangsan', '123');
+INSERT INTO for_docker.al_user_info (u_id, u_name, u_account, u_password) VALUES (2, '李四', 'lisi', '123');

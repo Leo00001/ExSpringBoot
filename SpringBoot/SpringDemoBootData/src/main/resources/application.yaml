@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: info
+
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: non_null
+  thymeleaf:
+    cache: false
+    check-template: true
+    check-template-location: true
+    enabled: true
+    encoding: UTF-8
+    mode: HTML5
+    suffix: .html
+
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/for_docker
+    username: root
+    password: baiyuas123
+    tomcat:
+      max-active: 20
+      max-idle: 8
+      min-idle: 8
+      initial-size: 10
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database: mysql
+    # 如果不配置，默认数据库引擎是使用MyISAM
+    database-platform: org.hibernate.dialect.MySQL55Dialect
