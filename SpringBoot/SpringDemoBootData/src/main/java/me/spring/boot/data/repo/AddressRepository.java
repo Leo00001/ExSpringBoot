@@ -3,6 +3,9 @@ package me.spring.boot.data.repo;
 import me.spring.boot.data.biz.Address;
 import me.spring.boot.data.biz.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 /**
  * @author baiyu
@@ -10,4 +13,41 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Address Dao
  */
 public interface AddressRepository extends JpaRepository<Address, Long> {
+
+    /**
+     * Jpa支持通过方法名称来查询，使用Intellij会自动提示，昊强大
+     *
+     * @param name 名称
+     * @param city 城市
+     * @return 集合
+     */
+    List<Address> findAddressByNameAndCity(String name, String city);
+
+    /**
+     * like 和limit使用
+     *
+     * @param city 城市
+     * @return 集合
+     */
+    List<Address> findFirst2ByCityLike(String city);
+
+    /**
+     * 通过@NamedQuery指定的JPQL查询
+     * {@link Address}
+     *
+     * @param province 省份
+     * @return 集合
+     */
+    List<Address> findByProvince(String province);
+
+
+    /**
+     * 注解@Query查询
+     *
+     * @param detail 模糊地址
+     * @return 集合
+     */
+    @Query(value = "select o from Address o where o.detail like ?1%")
+    List<Address> findByDetailStartingWith(String detail);
+
 }

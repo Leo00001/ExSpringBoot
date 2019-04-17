@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 单元测试测试Jpa数据操作
@@ -25,6 +26,40 @@ public class AddressRepositoryTest {
     @Resource
     private AddressRepository repository;
 
+    @Test
+    public void testQuery() {
+        List<Address> list = repository.findByDetailStartingWith("承德二中高三9板");
+        print(list.toString());
+    }
+
+    @Test
+    public void testNameQuery() {
+        List<Address> list = repository.findByProvince("河北省2");
+        print(list.toString());
+    }
+
+    @Test
+    public void testQueryByMethodName() {
+        List<Address> list = repository.findAddressByNameAndCity("刘大帅哥", "承德市");
+        print(list.toString());
+    }
+
+    @Test
+    public void testQueryLike() {
+
+        List<Address> list = repository.findFirst2ByCityLike("%承德%");
+        print(list.toString());
+    }
+
+
+    @Test
+    public void testOne() {
+        Optional<Address> addressOptional = repository.findById(1L);
+        if (addressOptional.isPresent()) {
+            Address address = addressOptional.get();
+            print(address.toString());
+        }
+    }
 
     @Test
     public void testList() {

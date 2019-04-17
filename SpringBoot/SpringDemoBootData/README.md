@@ -101,7 +101,119 @@ public class JdbcTemplateController {
 </dependency>
 ```
 
+基本使用
+
+新建接口继承JpaRepository<T, ID>,就可以实现简单的增删改程
+
+```
+public interface AddressRepository extends JpaRepository<Address, Long> {
+
+}
+```
+JpaRepository<T, ID>接口自带基本的增删改查方法
+
+```
+	List<T> findAll();
+	List<T> findAll(Sort sort);
+	void deleteAllInBatch();
+    ......
+```
+
+在需要使用的地方注入即可
+
+```
+@Controller
+@RequestMapping("/data/jpa")
+public class JpaController {
 
 
+    @Resource
+    private AddressRepository repository;
+
+    @GetMapping("/query/list")
+    public String list(Model model) {
+        List<Address> list = repository.findAll();
+        model.addAttribute("list", list);
+        return "/address/list";
+    }
 
 
+    @PostMapping("/save")
+    public String save(Address address) {
+        repository.save(address);
+        return "redirect:address/list";
+    }
+}
+
+```
+
+
+Jpa支持通过多种查询方式
+
+1. 方法名称来进行查询，如下：
+
+```
+public interface AddressRepository extends JpaRepository<Address, Long> {
+    List<Address> findAddressByNameAndCity(String name, String city);
+}
+```
+字段对应实体类的属性字段。下面是查询关键字对应Sql说明
+
+
+| 名称  | 示例 | sql中示例 |
+|-------|:---:|-------:|
+| And  | findAddressByNameAndCity | where name =? and city = ?     | 
+| Between | findAddressByIdBetween  | where id between ? and ?      | 
+| LessThan  | findAddressByIdLessThan   | where name < ? |
+| GreaterThan  | findAddressByIdGreaterThan   | where id > ? |
+| Equal  | findAddressByNameEqual   | where name = ? |
+| After  | findAddressByStartDateAfter   | where start_date > ? |
+| Before  | findAddressByStartDateBefore   | where start_date < ? |
+| IsNull  | findAddressByIdIsNull   | where name is null |
+| Like  | findAddressByNameLike   | where name like ? |
+| StartingWith  | findAddressByNameStartingWith   | where name like ? 参数后面加% |
+| First  | findFirst2ByCityLike   | where city like ? limit ? |
+| 。。。  | ?   | undefined |
+
+其他英文名称和sql含义差不多就不一一列举
+
+2. 通过@Query注解
+
+```
+public interface AddressRepository extends JpaRepository<Address, Long> {
+  
+      @Query(value = "select o from Address o where o.detail like ?1%")
+      List<Address> findByDetailStartingWith(String detail);
+}
+```
+
+@Query有几个属性说明下
+
+	String value() default "";
+	String countQuery() default "";
+	boolean nativeQuery() default false;
+
+- value查询的sql,默认为JPQL
+- countQuery 用户分页查询中总数的获取
+- nativeQuery 是否原生Sql 默认为false如果是指为true value值应该使用原生sql
+
+3. 通过@NameQuery查询
+
+```
+@Entity
+@Table(name = "al_address", indexes = {@Index(columnList = "id")})
+@NamedQuery(name = "Address.findByProvince", query = "SELECT p FROM Address p WHERE p.province = ?1")
+public class Address {
+    ......
+}
+
+public interface AddressRepository extends JpaRepository<Address, Long> {
+
+    List<Address> findByProvince(String province);
+}
+
+```
+
+这样在调用findByProvince的方法会去执行@NameQuery定义的sql
+
+4. 

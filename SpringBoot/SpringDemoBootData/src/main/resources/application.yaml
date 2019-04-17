@@ -38,6 +38,10 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
+      # 指定命名策略 待研究
+      #naming:
+      #  implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+      #  physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     show-sql: true
     database: mysql
     # 如果不配置，默认数据库引擎是使用MyISAM

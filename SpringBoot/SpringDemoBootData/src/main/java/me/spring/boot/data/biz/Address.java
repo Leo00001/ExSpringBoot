@@ -9,6 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "al_address", indexes = {@Index(columnList = "id")})
+@NamedQuery(name = "Address.findByProvince", query = "SELECT p FROM Address p WHERE p.province = ?1")
 public class Address {
 
 
