@@ -1,11 +1,14 @@
 package me.spring.boot.data.repo;
 
 import me.spring.boot.data.biz.Address;
+import me.spring.boot.data.biz.ObjSpecs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -120,6 +123,24 @@ public class AddressRepositoryTest {
     public void testCount() {
         long count = repository.count();
         print("==========address table has record : " + count);
+    }
+
+    @Test
+    public void testUpdate() {
+        int result = repository.setCity(1, "石家庄");
+        print("==========update address city -- : " + result);
+    }
+
+    @Test
+    public void testSpecification() {
+        List<Address> list = repository.findAll(ObjSpecs.findAddressFromSjz());
+        print(list.toString());
+    }
+
+    @Test
+    public void testPageable() {
+        Page<Address> pageList = repository.findByCity("承德市", PageRequest.of(1, 2));
+        pageList.forEach(address -> print(address.toString()));
     }
 
     private void print(String msg) {

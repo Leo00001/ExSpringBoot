@@ -92,7 +92,7 @@ public class JdbcTemplateController {
 
 ## Jpa
 
-引入jpa
+### 引入jpa
 
 ```
 <dependency>
@@ -101,7 +101,7 @@ public class JdbcTemplateController {
 </dependency>
 ```
 
-基本使用
+### 基本使用
 
 新建接口继承JpaRepository<T, ID>,就可以实现简单的增删改程
 
@@ -148,7 +148,7 @@ public class JpaController {
 ```
 
 
-Jpa支持通过多种查询方式
+### Jpa支持通过多种查询方式
 
 1. 方法名称来进行查询，如下：
 
@@ -179,13 +179,6 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
 2. 通过@Query注解
 
-```
-public interface AddressRepository extends JpaRepository<Address, Long> {
-  
-      @Query(value = "select o from Address o where o.detail like ?1%")
-      List<Address> findByDetailStartingWith(String detail);
-}
-```
 
 @Query有几个属性说明下
 
@@ -196,6 +189,43 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 - value查询的sql,默认为JPQL
 - countQuery 用户分页查询中总数的获取
 - nativeQuery 是否原生Sql 默认为false如果是指为true value值应该使用原生sql
+
+**基于参数索引方式查询**
+
+```
+      /**
+        * 查询
+        * /    
+      @Query(value = "select o from Address o where o.detail like ?1%") // 参数索引
+      // @Query(value = "select o from Address o where o.detail like ：detail") 
+      // 使用命名参数，参数前可通过@Param注解修改名称 例如：List<Address> findByDetailStartingWith(@Param("detail") String a);
+      // 还有一点特别说明，这里Spring会校验所有参数，所以如果使用命名参数方式，则所有参数都需要使用@Param注解，否则报错
+      List<Address> findByDetailStartingWith(String detail);
+```
+
+**基于命名参数查询**
+
+使用命名参数，参数前可通过@Param注解设置名称
+还有一点特别说明，这里Spring会校验所有参数，所以如果使用命名参数方式，则所有参数都需要使用@Param注解，否则报错
+
+```
+      @Query(value = "select o from Address o where o.detail like ：detail") 
+      List<Address> findByDetailStartingWith(@Param("detail") String detail);
+```
+
+**通过@Query修改数据**
+
+修改数据需要配合`@Modifying`注解使用，如下示例
+
+```
+      /**
+        * 更新
+        * /          
+      @Modifying
+      @Transactional
+      @Query("update Address o set o.city = :city where o.id = :id")
+      int setCity(@Param("id") long key, @Param("city") String city);
+```
 
 3. 通过@NameQuery查询
 
@@ -216,4 +246,63 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
 这样在调用findByProvince的方法会去执行@NameQuery定义的sql
 
-4. 
+4. 通过准则查询
+
+使用准则查询，需要啊实现`JpaSpecificationExecutor`接口，看下该接口方法
+
+```
+/**
+	Optional<T> findOne(@Nullable Specification<T> spec);
+
+	List<T> findAll(@Nullable Specification<T> spec);
+
+	Page<T> findAll(@Nullable Specification<T> spec, Pageable pageable);
+
+	List<T> findAll(@Nullable Specification<T> spec, Sort sort);
+
+	long count(@Nullable Specification<T> spec);
+```
+
+所以使用findX方法需要传入`Specification`参数，该接口需要实现如下方法
+
+    Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder);
+    
+toPredicate含有参个参数 
+
+- root 可以获取实体类的属性
+- query 查询条件
+- criteriaBuilder 查询条件
+
+```
+public class ObjSpecs {
+
+    /**
+     * 查询石家庄的地址
+     *
+     * @return
+     */
+    public static Specification<Address> findAddressFromSjz() {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("city"), "石家庄");
+    }
+}
+
+查询结果集
+repository.findAll(ObjSpecs.findAddressFromSjz());
+```
+
+5. 分页查询
+
+```
+    /**
+     * 分页查询
+     * @param city
+     * @return
+     */
+    Page<Address> findByCity(String city, Pageable pageable);
+```
+实现比较简单，返回一个Page对象就可以，传入要查询的内容和需要查询的页码`Pageable.of(page, size)`;
+
+### 自定义Repository
+
+
+

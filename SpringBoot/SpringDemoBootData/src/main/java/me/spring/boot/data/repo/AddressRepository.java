@@ -2,9 +2,17 @@ package me.spring.boot.data.repo;
 
 import me.spring.boot.data.biz.Address;
 import me.spring.boot.data.biz.Product;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -12,7 +20,7 @@ import java.util.List;
  * <p>
  * Address Dao
  */
-public interface AddressRepository extends JpaRepository<Address, Long> {
+public interface AddressRepository extends JpaRepository<Address, Long>, JpaSpecificationExecutor<Address> {
 
     /**
      * Jpa支持通过方法名称来查询，使用Intellij会自动提示，昊强大
@@ -50,4 +58,22 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
     @Query(value = "select o from Address o where o.detail like ?1%")
     List<Address> findByDetailStartingWith(String detail);
 
+    /**
+     * 更新 @Modifying
+     *
+     * @param key
+     * @param city
+     * @return
+     */
+    @Modifying
+    @Transactional
+    @Query("update Address o set o.city = :city where o.id = :id")
+    int setCity(@Param("id") long key, @Param("city") String city);
+
+    /**
+     * 分页查询
+     * @param city
+     * @return
+     */
+    Page<Address> findByCity(String city, Pageable pageable);
 }
