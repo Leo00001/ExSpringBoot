@@ -13,6 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +31,9 @@ public class AddressRepositoryTest {
 
     @Resource
     private AddressRepository repository;
+
+    @PersistenceContext
+    private EntityManager manager;
 
     @Test
     public void testQuery() {
@@ -141,6 +147,16 @@ public class AddressRepositoryTest {
     public void testPageable() {
         Page<Address> pageList = repository.findByCity("承德市", PageRequest.of(1, 2));
         pageList.forEach(address -> print(address.toString()));
+    }
+
+    @Test
+    public void testProcedure() {
+        Query query = manager.createNativeQuery("select hello()");
+        if (query != null) {
+            String result = (String) query.getSingleResult();
+            print(result);
+        }
+
     }
 
     private void print(String msg) {

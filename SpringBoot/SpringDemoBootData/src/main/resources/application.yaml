@@ -26,8 +26,8 @@ spring:
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/for_docker
-    username: root
+    url: jdbc:mysql://blog.baiyuas.com:3306/test
+    username: leo
     password: baiyuas123
     tomcat:
       max-active: 20

@@ -282,7 +282,7 @@ public class ObjSpecs {
      * @return
      */
     public static Specification<Address> findAddressFromSjz() {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("city"), "石家庄");
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(roo t.get("city"), "石家庄");
     }
 }
 
@@ -304,5 +304,36 @@ repository.findAll(ObjSpecs.findAddressFromSjz());
 
 ### 自定义Repository
 
+向免我们所了解的都是通过`JpaRepository`接口完成的***CURD***，对于一般的sql执行我们
+都可以通过@Query注解解决，但是不是所有的，这就需要我们来自定义Repository来.
 
+我们下看下Spring中Repository中的继承关系
+
+```
+Repository
+    - RevisionRepository (org.springframework.data.repository.history)
+    - ReactiveCrudRepository (org.springframework.data.repository.reactive)
+        - ReactiveSortingRepository (org.springframework.data.repository.reactive)
+    - CrudRepository (org.springframework.data.repository)
+        - PagingAndSortingRepository (org.springframework.data.repository)
+            - JpaRepository (org.springframework.data.jpa.repository)
+                - JpaRepositoryImplementation (org.springframework.data.jpa.repository.support)
+                    - SimpleJpaRepository (org.springframework.data.jpa.repository.support)
+                - AddressRepository (me.spring.boot.data.repo)
+            - ICustomRepository (me.spring.boot.data.repo)
+    - RxJava2CrudRepository (org.springframework.data.repository.reactive)
+        - RxJava2SortingRepository (org.springframework.data.repository.reactive)
+```
+
+所有的接口和实现类都会来自Repository，所以如果你想所有的都自己实现可以完全通过继承或者实现Repository来处理。
+
+自定义Repository接口
+
+```
+@NoRepositoryBean
+public interface ICustomRepository<T, ID extends Serializable> extends PagingAndSortingRepository<T, ID> {
+
+        T ececuteFunc();
+}
+```
 
